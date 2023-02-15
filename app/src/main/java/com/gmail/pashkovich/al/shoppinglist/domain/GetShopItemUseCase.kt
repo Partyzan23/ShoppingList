@@ -1,8 +1,8 @@
 package com.gmail.pashkovich.al.shoppinglist.domain
 
-class GetShopItemUseCase(private val shopItemRepository: ShopItemRepository) {
+class GetShopItemUseCase(private val shopListRepository: ShopListRepository) {
 
     fun getShopItem(shopItemId: Int): ShopItem {
-       return shopItemRepository.getShopItem(shopItemId)
+       return shopListRepository.getShopItem(shopItemId)
     }
 }

@@ -1,6 +1,6 @@
 package com.gmail.pashkovich.al.shoppinglist.domain
 
-interface ShopItemRepository {
+interface ShopListRepository {
 
     fun addShopItem(shopItem: ShopItem)
 
