@@ -1,8 +1,8 @@
 package com.gmail.pashkovich.al.shoppinglist.domain
 
-class DeleteShopItemUseCase (private val shopItemRepository: ShopItemRepository) {
+class DeleteShopItemUseCase (private val shopListRepository: ShopListRepository) {
 
     fun deleteShopItem(shopItem: ShopItem) {
-        shopItemRepository.deleteShopItem(shopItem)
+        shopListRepository.deleteShopItem(shopItem)
     }
 }
