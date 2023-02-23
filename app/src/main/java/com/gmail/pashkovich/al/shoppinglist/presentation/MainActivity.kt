@@ -9,6 +9,8 @@ import com.gmail.pashkovich.al.shoppinglist.R
 
 class MainActivity : AppCompatActivity() {
 
+    private var count = 0
+
     private lateinit var viewModel: MainViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -16,8 +18,12 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
         viewModel = ViewModelProvider(this)[MainViewModel::class.java]
         viewModel.shopList.observe(this) {
+            if (count == 0) {
+                count++
+                val item = it[0]
+                viewModel.deleteShopItem(item)
+            }
             Log.d("MainActivityTest", it.toString())
         }
-        viewModel.getShopList()
     }
 }
