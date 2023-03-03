@@ -11,8 +11,10 @@ import com.gmail.pashkovich.al.shoppinglist.domain.ShopItem
 class ShopListAdapter: RecyclerView.Adapter<ShopListAdapter.ShopItemViewHolder>() {
 
     companion object{
-        private const val VIEW_TYPE_ENABLED = 100
-        private const val VIEW_TYPE_DISABLED = 101
+        const val VIEW_TYPE_ENABLED = 100
+        const val VIEW_TYPE_DISABLED = 101
+
+        const val MAX_POOL_SIZE = 10
     }
 
     var shopList = listOf<ShopItem>()
