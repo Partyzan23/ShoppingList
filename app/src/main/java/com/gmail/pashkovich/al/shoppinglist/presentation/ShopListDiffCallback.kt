@@ -6,7 +6,7 @@ import com.gmail.pashkovich.al.shoppinglist.domain.ShopItem
 class ShopListDiffCallback(
     private val oldList: List<ShopItem>,
     private val newList: List<ShopItem>
-) : DiffUtil.Callback() {
+): DiffUtil.Callback() {
     override fun getOldListSize(): Int {
         return oldList.size
     }
@@ -26,4 +26,5 @@ class ShopListDiffCallback(
         val newItem = newList[newItemPosition]
         return oldItem == newItem
     }
+
 }
