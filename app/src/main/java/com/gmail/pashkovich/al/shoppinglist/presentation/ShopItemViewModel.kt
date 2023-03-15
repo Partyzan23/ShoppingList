@@ -1,5 +1,7 @@
 package com.gmail.pashkovich.al.shoppinglist.presentation
 
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.gmail.pashkovich.al.shoppinglist.data.ShopListRepositoryImpl
 import com.gmail.pashkovich.al.shoppinglist.domain.AddShopItemUseCase
@@ -16,6 +18,16 @@ class ShopItemViewModel : ViewModel() {
     private val editShopItemUseCase = EditShopItemUseCase(repository)
     private val addShopItemUseCase = AddShopItemUseCase(repository)
 
+    private val _errorInputName = MutableLiveData<Boolean>()
+    private val _errorInputCount = MutableLiveData<Boolean>()
+    private val _shopItem = MutableLiveData<ShopItem>()
+    private val _shouldCloseScreen = MutableLiveData<Unit>()
+
+    val errorInputName: LiveData<Boolean> get() = _errorInputName
+    val errorInputCount: LiveData<Boolean> get() = _errorInputCount
+    val shopItem: LiveData<ShopItem> get() = _shopItem
+    val shouldCloseScreen: LiveData<Unit> get() = _shouldCloseScreen
+
     fun addShopItem(inputName: String?, inputCount: String?) {
         val name = parseName(inputName)
         val count = parseCount(inputCount)
@@ -23,6 +35,7 @@ class ShopItemViewModel : ViewModel() {
         if (fieldsValid) {
             val shopItem = ShopItem(name, count,true)
             addShopItemUseCase.addShopItem(shopItem)
+            finishWork()
         }
 
     }
@@ -32,13 +45,17 @@ class ShopItemViewModel : ViewModel() {
         val count = parseCount(inputCount)
         val fieldsValid = validateInput(name, count)
         if (fieldsValid) {
-            val shopItem = ShopItem(name, count,true)
-            editShopItemUseCase.editShopItem(shopItem)
+            _shopItem.value?.let {
+                val item = it.copy(name = name, count = count)
+                editShopItemUseCase.editShopItem(item)
+                finishWork()
+            }
         }
     }
 
     fun getShopItem(shopItemID: Int) {
         val item = getShopItemUseCase.getShopItem(shopItemID)
+        _shopItem.value = item
     }
 
     private fun parseName(inputName: String?): String {
@@ -56,13 +73,25 @@ class ShopItemViewModel : ViewModel() {
     private fun validateInput(name: String, count: Int): Boolean {
         var result = true
         if (name.isBlank()) {
-            //TODO: show error inputName
+            _errorInputName.value = true
             result = false
         }
         if (count <= 0) {
-            //TODO: show error inputCount
+            _errorInputCount.value = true
             result = false
         }
         return result
+    }
+
+    fun resetErrorInputName() {
+        _errorInputName.value = false
+    }
+
+    fun resetErrorInputCount() {
+        _errorInputCount.value = false
+    }
+
+    private fun finishWork() {
+        _shouldCloseScreen.value = Unit
     }
 }
