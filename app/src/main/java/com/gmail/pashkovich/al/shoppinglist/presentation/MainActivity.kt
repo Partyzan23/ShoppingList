@@ -3,6 +3,7 @@ package com.gmail.pashkovich.al.shoppinglist.presentation
 import android.app.Activity
 import android.os.Bundle
 import android.widget.Button
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentContainer
@@ -14,7 +15,7 @@ import com.gmail.pashkovich.al.shoppinglist.R
 import com.gmail.pashkovich.al.shoppinglist.domain.ShopItem
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), ShopItemFragment.OnEditingFinishedListener {
 
     private lateinit var viewModel: MainViewModel
     private lateinit var adapter: ShopListAdapter
@@ -108,5 +109,10 @@ class MainActivity : AppCompatActivity() {
         adapter.onShopItemLongClickListener = {
             viewModel.changeEnabledState(it)
         }
+    }
+
+    override fun onEditingFinished() {
+        Toast.makeText(this, "Success" , Toast.LENGTH_SHORT).show()
+        supportFragmentManager.popBackStack()
     }
 }
