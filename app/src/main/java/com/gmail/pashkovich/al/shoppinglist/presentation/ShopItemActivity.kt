@@ -5,13 +5,16 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.text.Editable
+import android.text.Layout
 import android.text.TextWatcher
+import android.view.LayoutInflater
 import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.gmail.pashkovich.al.shoppinglist.R
+import com.gmail.pashkovich.al.shoppinglist.databinding.ActivityShopItemBinding
 import com.gmail.pashkovich.al.shoppinglist.domain.ShopItem
 import com.google.android.material.textfield.TextInputLayout
 
@@ -25,12 +28,15 @@ class ShopItemActivity : AppCompatActivity(), ShopItemFragment.OnEditingFinished
 //    private lateinit var etCount: EditText
 //    private lateinit var buttonSave: Button
 //
+    private lateinit var binding: ActivityShopItemBinding
+
     private var screenMode = UNDEFINED_SCREEN_MODE
     private var shopItemId = ShopItem.UNDEFINED_ID
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_shop_item)
+        binding = ActivityShopItemBinding.inflate(layoutInflater)
+        setContentView(binding.root)
         parseIntent()
 //        viewModel = ViewModelProvider(this)[ShopItemViewModel::class.java]
 //        initViews()
