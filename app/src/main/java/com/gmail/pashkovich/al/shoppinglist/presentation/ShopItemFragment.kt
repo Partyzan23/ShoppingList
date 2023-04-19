@@ -49,7 +49,7 @@ class ShopItemFragment : Fragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         _binding = FragmentShopItemBinding.inflate(inflater, container, false)
         return binding.root
     }
