@@ -1,10 +1,7 @@
 package com.gmail.pashkovich.al.shoppinglist.presentation
 
 import android.app.Application
-import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
+import androidx.lifecycle.*
 import com.gmail.pashkovich.al.shoppinglist.data.ShopListRepositoryImpl
 import com.gmail.pashkovich.al.shoppinglist.domain.AddShopItemUseCase
 import com.gmail.pashkovich.al.shoppinglist.domain.EditShopItemUseCase
@@ -34,14 +31,12 @@ class ShopItemViewModel(application: Application) : AndroidViewModel(application
     val shopItem: LiveData<ShopItem> get() = _shopItem
     val shouldCloseScreen: LiveData<Unit> get() = _shouldCloseScreen
 
-    private val scope = CoroutineScope(Dispatchers.IO)
-
     fun addShopItem(inputName: String?, inputCount: String?) {
         val name = parseName(inputName)
         val count = parseCount(inputCount)
         val fieldsValid = validateInput(name, count)
         if (fieldsValid) {
-            scope.launch {
+            viewModelScope.launch {
                 val shopItem = ShopItem(name, count,true)
                 addShopItemUseCase.addShopItem(shopItem)
                 finishWork()
@@ -56,7 +51,7 @@ class ShopItemViewModel(application: Application) : AndroidViewModel(application
         val fieldsValid = validateInput(name, count)
         if (fieldsValid) {
             _shopItem.value?.let {
-                scope.launch {
+                viewModelScope.launch {
                     val item = it.copy(name = name, count = count)
                     editShopItemUseCase.editShopItem(item)
                     finishWork()
@@ -66,9 +61,9 @@ class ShopItemViewModel(application: Application) : AndroidViewModel(application
     }
 
     fun getShopItem(shopItemID: Int) {
-        scope.launch {
+        viewModelScope.launch {
             val item = getShopItemUseCase.getShopItem(shopItemID)
-            _shopItem.postValue(item)
+            _shopItem.value = item
         }
     }
 
@@ -107,10 +102,5 @@ class ShopItemViewModel(application: Application) : AndroidViewModel(application
 
     private fun finishWork() {
         _shouldCloseScreen.value = Unit
-    }
-
-    override fun onCleared() {
-        super.onCleared()
-        scope.cancel()
     }
 }

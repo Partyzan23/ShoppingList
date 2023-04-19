@@ -3,6 +3,7 @@ package com.gmail.pashkovich.al.shoppinglist.presentation
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.gmail.pashkovich.al.shoppinglist.data.ShopListRepositoryImpl
 import com.gmail.pashkovich.al.shoppinglist.domain.DeleteShopItemUseCase
 import com.gmail.pashkovich.al.shoppinglist.domain.EditShopItemUseCase
@@ -23,23 +24,16 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
 
     val shopList = getShopListUseCase.getShopList()
 
-    private val scope = CoroutineScope(Dispatchers.IO)
-
     fun deleteShopItem(shopItem: ShopItem) {
-        scope.launch {
+        viewModelScope.launch {
             deleteShopItemUseCase.deleteShopItem(shopItem)
         }
     }
 
     fun changeEnabledState(shopItem: ShopItem) {
-        scope.launch {
+        viewModelScope.launch {
             val newItem = shopItem.copy(enabled = !shopItem.enabled)
             editShopItemUseCase.editShopItem(newItem)
         }
-    }
-
-    override fun onCleared() {
-        super.onCleared()
-        scope.cancel()
     }
 }
