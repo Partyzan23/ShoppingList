@@ -5,13 +5,12 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.map
 import com.gmail.pashkovich.al.shoppinglist.domain.ShopItem
 import com.gmail.pashkovich.al.shoppinglist.domain.ShopListRepository
+import javax.inject.Inject
 
-class ShopListRepositoryImpl(
-    application: Application
+class ShopListRepositoryImpl @Inject constructor(
+    private val shopListDao: ShopListDao,
+    private val mapper: ShopListMapper
 ) : ShopListRepository {
-
-    private val shopListDao = AppDataBase.getInstance(application).shopListDao()
-    private val mapper = ShopListMapper()
 
     override suspend fun addShopItem(shopItem: ShopItem) {
         shopListDao.addShopItem(mapper.mapEntityToDbModel(shopItem))
@@ -32,6 +31,6 @@ class ShopListRepositoryImpl(
 
     override fun getShopList(): LiveData<List<ShopItem>> = shopListDao.getShopList()
         .map {
-        mapper.mapListDbModelToListEntity(it)
-    }
+            mapper.mapListDbModelToListEntity(it)
+        }
 }

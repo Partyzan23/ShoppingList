@@ -11,20 +11,29 @@ import androidx.recyclerview.widget.RecyclerView
 import com.gmail.pashkovich.al.shoppinglist.R
 import com.gmail.pashkovich.al.shoppinglist.databinding.ActivityMainBinding
 import com.google.android.material.floatingactionbutton.FloatingActionButton
+import javax.inject.Inject
 
 class MainActivity : AppCompatActivity(), ShopItemFragment.OnEditingFinishedListener {
+
+    @Inject
+    lateinit var viewModelFactory: ViewModelFactory
 
     private lateinit var binding: ActivityMainBinding
 
     private lateinit var viewModel: MainViewModel
     private lateinit var adapter: ShopListAdapter
 
+    private val component by lazy {
+        (application as ShopListApp).component
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
+        component.inject(this)
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
         setupRecyclerView()
-        viewModel = ViewModelProvider(this)[MainViewModel::class.java]
+        viewModel = ViewModelProvider(this, viewModelFactory)[MainViewModel::class.java]
         viewModel.shopList.observe(this) {
             adapter.submitList(it)
         }
@@ -39,8 +48,7 @@ class MainActivity : AppCompatActivity(), ShopItemFragment.OnEditingFinishedList
     }
 
 
-
-    private fun isOnePaneMode():Boolean {
+    private fun isOnePaneMode(): Boolean {
         return binding.shopItemContainer == null
     }
 
@@ -109,7 +117,7 @@ class MainActivity : AppCompatActivity(), ShopItemFragment.OnEditingFinishedList
     }
 
     override fun onEditingFinished() {
-        Toast.makeText(this, "Success" , Toast.LENGTH_SHORT).show()
+        Toast.makeText(this, "Success", Toast.LENGTH_SHORT).show()
         supportFragmentManager.popBackStack()
     }
 }

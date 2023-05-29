@@ -1,8 +1,9 @@
 package com.gmail.pashkovich.al.shoppinglist.data
 
 import com.gmail.pashkovich.al.shoppinglist.domain.ShopItem
+import javax.inject.Inject
 
-class ShopListMapper {
+class ShopListMapper @Inject constructor() {
 
     fun mapEntityToDbModel(shopItem: ShopItem) = ShopItemDbModel(
         id = shopItem.id,

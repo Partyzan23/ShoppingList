@@ -1,25 +1,21 @@
 package com.gmail.pashkovich.al.shoppinglist.presentation
 
-import android.app.Application
-import androidx.lifecycle.*
-import com.gmail.pashkovich.al.shoppinglist.data.ShopListRepositoryImpl
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.gmail.pashkovich.al.shoppinglist.domain.AddShopItemUseCase
 import com.gmail.pashkovich.al.shoppinglist.domain.EditShopItemUseCase
 import com.gmail.pashkovich.al.shoppinglist.domain.GetShopItemUseCase
 import com.gmail.pashkovich.al.shoppinglist.domain.ShopItem
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.cancel
 import kotlinx.coroutines.launch
-import java.lang.Exception
+import javax.inject.Inject
 
-class ShopItemViewModel(application: Application) : AndroidViewModel(application) {
-
-    private val repository = ShopListRepositoryImpl(application)
-
-    private val getShopItemUseCase = GetShopItemUseCase(repository)
-    private val editShopItemUseCase = EditShopItemUseCase(repository)
-    private val addShopItemUseCase = AddShopItemUseCase(repository)
+class ShopItemViewModel @Inject constructor(
+    private val getShopItemUseCase: GetShopItemUseCase,
+            private val editShopItemUseCase: EditShopItemUseCase,
+            private val addShopItemUseCase: AddShopItemUseCase
+) : ViewModel() {
 
     private val _errorInputName = MutableLiveData<Boolean>()
     private val _errorInputCount = MutableLiveData<Boolean>()
