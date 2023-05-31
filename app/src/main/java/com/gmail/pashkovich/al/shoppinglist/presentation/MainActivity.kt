@@ -1,5 +1,7 @@
 package com.gmail.pashkovich.al.shoppinglist.presentation
 
+import android.content.ContentResolver
+import android.net.Uri
 import android.os.Bundle
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -45,6 +47,14 @@ class MainActivity : AppCompatActivity(), ShopItemFragment.OnEditingFinishedList
                 launchFragment(ShopItemFragment.newInstanceAddItem())
             }
         }
+        contentResolver.query(
+            Uri.parse("content://com.gmail.pashkovich.al.shoppinglist/shop_item"),
+            null,
+            null,
+            null,
+            null,
+            null
+        )
     }
 
 
