@@ -48,7 +48,7 @@ class MainActivity : AppCompatActivity(), ShopItemFragment.OnEditingFinishedList
             }
         }
         contentResolver.query(
-            Uri.parse("content://com.gmail.pashkovich.al.shoppinglist/shop_item"),
+            Uri.parse("content://com.gmail.pashkovich.al.shoppinglist/shop_items"),
             null,
             null,
             null,
