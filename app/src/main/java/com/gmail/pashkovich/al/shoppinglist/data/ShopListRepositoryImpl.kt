@@ -1,6 +1,5 @@
 package com.gmail.pashkovich.al.shoppinglist.data
 
-import android.app.Application
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.map
 import com.gmail.pashkovich.al.shoppinglist.domain.ShopItem

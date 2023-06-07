@@ -1,21 +1,25 @@
 package com.gmail.pashkovich.al.shoppinglist.presentation
 
+import android.content.ContentValues
 import android.content.Context
+import android.net.Uri
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
-import android.widget.EditText
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
-import com.gmail.pashkovich.al.shoppinglist.R
+import com.gmail.pashkovich.al.shoppinglist.data.ShopListProvider.Companion.KEY_COUNT
+import com.gmail.pashkovich.al.shoppinglist.data.ShopListProvider.Companion.KEY_ENABLED
+import com.gmail.pashkovich.al.shoppinglist.data.ShopListProvider.Companion.KEY_ID
+import com.gmail.pashkovich.al.shoppinglist.data.ShopListProvider.Companion.KEY_NAME
 import com.gmail.pashkovich.al.shoppinglist.databinding.FragmentShopItemBinding
 import com.gmail.pashkovich.al.shoppinglist.domain.ShopItem
-import com.google.android.material.textfield.TextInputLayout
 import javax.inject.Inject
+import kotlin.concurrent.thread
 
 class ShopItemFragment : Fragment() {
 
@@ -149,13 +153,43 @@ class ShopItemFragment : Fragment() {
     private fun launchEditModeScreen() {
         viewModel.getShopItem(shopItemId)
         binding.buttonSave.setOnClickListener {
-            viewModel.editShopItem(binding.etName.text?.toString(), binding.etCount.text?.toString())
+//            viewModel.editShopItem(
+//                binding.etName.text?.toString(),
+//                binding.etCount.text?.toString()
+//            )
+            thread {
+                context?.contentResolver?.update(
+                    Uri.parse("content://com.gmail.pashkovich.al.shoppinglist/shop_items"),
+                    ContentValues().apply {
+                        put(KEY_ID, shopItemId)
+                        put(KEY_NAME, binding.etName.text?.toString())
+                        put(KEY_COUNT, binding.etCount.text?.toString())
+                        put(KEY_ENABLED, viewModel.shopItem.value?.enabled)
+                    },
+                    null,
+                    null
+                )
+            }
         }
     }
 
     private fun launchAddModeScreen() {
         binding.buttonSave.setOnClickListener {
-            viewModel.addShopItem(binding.etName.text?.toString(), binding.etCount.text?.toString())
+//            viewModel.addShopItem(
+//                binding.etName.text?.toString(),
+//                binding.etCount.text?.toString()
+//            )
+            thread {
+                context?.contentResolver?.insert(
+                    Uri.parse("content://com.gmail.pashkovich.al.shoppinglist/shop_items"),
+                    ContentValues().apply {
+                        put(KEY_ID, 0)
+                        put(KEY_NAME, binding.etName.text?.toString())
+                        put(KEY_COUNT, binding.etCount.text?.toString()?.toInt())
+                        put(KEY_ENABLED, true)
+                    }
+                )
+            }
         }
     }
 
