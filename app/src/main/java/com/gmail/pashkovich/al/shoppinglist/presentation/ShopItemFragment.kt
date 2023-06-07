@@ -6,6 +6,7 @@ import android.net.Uri
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -152,10 +153,23 @@ class ShopItemFragment : Fragment() {
     private fun launchEditModeScreen() {
         viewModel.getShopItem(shopItemId)
         binding.buttonSave.setOnClickListener {
-            viewModel.editShopItem(
-                binding.etName.text?.toString(),
-                binding.etCount.text?.toString()
-            )
+//            viewModel.editShopItem(
+//                binding.etName.text?.toString(),
+//                binding.etCount.text?.toString()
+//            )
+            thread {
+                context?.contentResolver?.update(
+                    Uri.parse("content://com.gmail.pashkovich.al.shoppinglist/shop_items"),
+                    ContentValues().apply {
+                        put(KEY_ID, shopItemId)
+                        put(KEY_NAME, binding.etName.text?.toString())
+                        put(KEY_COUNT, binding.etCount.text?.toString())
+                        put(KEY_ENABLED, viewModel.shopItem.value?.enabled)
+                    },
+                    null,
+                    null
+                )
+            }
         }
     }
 
